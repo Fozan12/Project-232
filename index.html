@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Creator</title>
+</head>
+<body>
+    <h2>Create and Download a Text File</h2>
+    
+    <input type="text" id="fileName" placeholder="Enter file name (without .txt)">
+    <input type="text" id="fileContent" placeholder="Enter content">
+    <button onclick="saveFile()">Send</button>
+    
+    <h3>File Content:</h3>
+    <pre id="output"></pre>
+
+    <script>
+        function saveFile() {
+            const fileName = document.getElementById("fileName").value.trim();
+            const fileContent = document.getElementById("fileContent").value;
+
+            if (!fileName) {
+                alert("Please enter a valid file name.");
+                return;
+            }
+
+            // Create a Blob (file-like object)
+            const blob = new Blob([fileContent], { type: "text/plain" });
+
+            // Create a download link
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName + ".txt";  // Append .txt extension
+            a.click();  // Simulate click to trigger download
+
+            // Display the content on the page
+            document.getElementById("output").textContent = `File "${fileName}.txt" created with content:\n\n${fileContent}`;
+        }
+    </script>
+</body>
+</html>

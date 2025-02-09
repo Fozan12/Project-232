@@ -3,39 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Creator</title>
+    <title>Create Folder</title>
 </head>
 <body>
-    <h2>Create and Download a Text File</h2>
-    
-    <input type="text" id="fileName" placeholder="Enter file name (without .txt)">
-    <input type="text" id="fileContent" placeholder="Enter content">
-    <button onclick="saveFile()">Send</button>
-    
-    <h3>File Content:</h3>
+    <h2>Create Folder on Server</h2>
+    <input type="text" id="folderName" placeholder="Enter folder name">
+    <button onclick="createFolder()">Create Folder</button>
+
+    <h3>Status:</h3>
     <pre id="output"></pre>
 
     <script>
-        function saveFile() {
-            const fileName = document.getElementById("fileName").value.trim();
-            const fileContent = document.getElementById("fileContent").value;
+        function createFolder() {
+            const folderName = document.getElementById("folderName").value.trim();
 
-            if (!fileName) {
-                alert("Please enter a valid file name.");
+            if (!folderName) {
+                alert("Please enter a valid folder name.");
                 return;
             }
 
-            // Create a Blob (file-like object)
-            const blob = new Blob([fileContent], { type: "text/plain" });
-
-            // Create a download link
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = fileName + ".txt";  // Append .txt extension
-            a.click();  // Simulate click to trigger download
-
-            // Display the content on the page
-            document.getElementById("output").textContent = `File "${fileName}.txt" created with content:\n\n${fileContent}`;
+            // Send request to PHP script
+            fetch("create_folder.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "folderName=" + encodeURIComponent(folderName)
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("output").textContent = data;
+            })
+            .catch(error => {
+                document.getElementById("output").textContent = "Error: " + error;
+            });
         }
     </script>
 </body>
